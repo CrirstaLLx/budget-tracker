@@ -1,11 +1,10 @@
 package com.crirstallx.budgettracker.service;
 
-import com.crirstallx.budgettracker.model.Account;
-import com.crirstallx.budgettracker.model.Budget;
-import com.crirstallx.budgettracker.model.Transaction;
+import com.crirstallx.budgettracker.model.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.YearMonth;
+import java.util.*;
 
 public class FinanceManager {
     private List<Account> accountList;
@@ -31,5 +30,29 @@ public class FinanceManager {
 
     public void addBudget(Budget budget) {
         budgetList.add(budget);
+    }
+
+    public BigDecimal getBalance(Account account) {
+        BigDecimal balance = account.getBalance();
+        for (Transaction transaction : transactionList) {
+            if (transaction.getAccount().equals(account)) {
+                if (transaction.getType() == TransactionType.INCOME) {
+                    balance = balance.add(transaction.getAmount());
+                } else if (transaction.getType() == TransactionType.EXPENSE) {
+                    balance = balance.subtract(transaction.getAmount());
+                }
+            }
+        }
+        return balance;
+    }
+
+    public Map<ExpenseCategory, BigDecimal> getExpensesByCategory(YearMonth month) {
+        Map<ExpenseCategory, BigDecimal> expenses = new EnumMap<>(ExpenseCategory.class);
+        for (Transaction transaction : transactionList) {
+            if (transaction.getType() == TransactionType.EXPENSE && YearMonth.from(transaction.getDateTime()).equals(month)) {
+                expenses.merge(transaction.getExpenseCategory(), transaction.getAmount(), BigDecimal::add);
+            }
+        }
+        return expenses;
     }
 }
