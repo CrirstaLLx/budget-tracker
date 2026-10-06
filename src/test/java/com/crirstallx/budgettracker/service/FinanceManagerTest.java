@@ -49,6 +49,6 @@ public class FinanceManagerTest {
         Map<ExpenseCategory, BigDecimal> result = financeManager.getExpensesByCategory(YearMonth.of(2026, 10));
         BigDecimal expected = new BigDecimal("77.00");
         BigDecimal actual = result.get(ExpenseCategory.FITNESS);
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 }
