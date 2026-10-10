@@ -30,6 +30,7 @@ public class FinanceManager {
     }
 
     public void addBudget(Budget budget) {
+        budgetList.removeIf(b -> b.getExpenseCategory().equals(budget.getExpenseCategory()) && b.getYearMonth().equals(budget.getYearMonth()));
         budgetList.add(budget);
     }
 

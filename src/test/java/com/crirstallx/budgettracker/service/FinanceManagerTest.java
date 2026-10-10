@@ -77,4 +77,24 @@ public class FinanceManagerTest {
         assertThrows(IllegalArgumentException.class,
                 () -> financeManager.getBudgetStatus(ExpenseCategory.FITNESS, YearMonth.of(2026, 10)));
     }
+
+    @Test
+    public void addBudget_replacesExistingBudgetForSameCategoryAndMonth() {
+        FinanceManager financeManager = new FinanceManager();
+        Account account = new Account("RuslanG", new BigDecimal("1000.00"));
+        financeManager.addAccount(account);
+
+        Budget budget = new Budget(ExpenseCategory.FITNESS, new BigDecimal("200.00"), YearMonth.of(2026,10));
+        financeManager.addBudget(budget);
+
+        Budget budgetNew = new Budget(ExpenseCategory.FITNESS, new BigDecimal("100.00"), YearMonth.of(2026,10));
+        financeManager.addBudget(budgetNew);
+
+        Transaction transaction = new Transaction(account, TransactionType.EXPENSE, ExpenseCategory.FITNESS, new BigDecimal("50.00"), "Golem OFF-PEAK", LocalDateTime.of(2026, 10, 1, 0, 0, 0));
+        financeManager.addTransaction(transaction);
+
+        BigDecimal actual = financeManager.getBudgetStatus(ExpenseCategory.FITNESS, YearMonth.of(2026, 10));
+        BigDecimal expected = new BigDecimal("50.00");
+        assertEquals(expected, actual);
+    }
 }
