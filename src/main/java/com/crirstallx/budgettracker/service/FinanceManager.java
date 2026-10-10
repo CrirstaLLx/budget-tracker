@@ -1,12 +1,14 @@
 package com.crirstallx.budgettracker.service;
 
 import com.crirstallx.budgettracker.model.*;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.YearMonth;
 import java.util.*;
 
+@Service
 public class FinanceManager {
     private List<Account> accountList;
     private List<Transaction> transactionList;
@@ -65,5 +67,9 @@ public class FinanceManager {
                 .orElseThrow(() -> new IllegalArgumentException("No budget found"));
         BigDecimal spent = getExpensesByCategory(month).getOrDefault(category, BigDecimal.ZERO);
         return spent.multiply(new BigDecimal("100")).divide(budget.getAmount(), 2, RoundingMode.HALF_UP);
+    }
+
+    public List<Account> getAccountList() {
+        return accountList;
     }
 }
