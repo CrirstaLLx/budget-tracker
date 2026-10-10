@@ -3,6 +3,7 @@ package com.crirstallx.budgettracker.service;
 import com.crirstallx.budgettracker.model.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.YearMonth;
 import java.util.*;
 
@@ -54,5 +55,14 @@ public class FinanceManager {
             }
         }
         return expenses;
+    }
+
+    public BigDecimal getBudgetStatus(ExpenseCategory category, YearMonth month) {
+        Budget budget = budgetList.stream()
+                .filter(b -> b.getExpenseCategory().equals(category) && b.getYearMonth().equals(month))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No budget found"));
+        BigDecimal spent = getExpensesByCategory(month).getOrDefault(category, BigDecimal.ZERO);
+        return spent.multiply(new BigDecimal("100")).divide(budget.getAmount(), 2, RoundingMode.HALF_UP);
     }
 }
