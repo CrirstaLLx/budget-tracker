@@ -92,4 +92,22 @@ public class FinanceManagerTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void addTransaction_throwsForUnknownAccount() {
+        Account account1 = new Account("RuslanNonG", new BigDecimal("10000.00"));
+        Transaction transaction = new Transaction(account1, TransactionType.EXPENSE, ExpenseCategory.FITNESS, new BigDecimal("50.00"), "Golem OFF-PEAK", LocalDateTime.of(2026, 10, 1, 0, 0, 0));
+        assertThrows(IllegalArgumentException.class,
+                () -> financeManager.addTransaction(transaction));
+    }
+
+    @Test
+    public void getBudgetStatus_returnZeroWhenNothingSpent() {
+        Budget budget = new Budget(ExpenseCategory.FITNESS, new BigDecimal("200.00"), YearMonth.of(2026,10));
+        financeManager.addBudget(budget);
+
+        BigDecimal actual = financeManager.getBudgetStatus(ExpenseCategory.FITNESS, YearMonth.of(2026, 10));
+        BigDecimal expected = new BigDecimal("0.00");
+        assertEquals(expected, actual);
+    }
+
 }
