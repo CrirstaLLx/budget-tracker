@@ -2,9 +2,7 @@ package com.crirstallx.budgettracker.controller;
 
 import com.crirstallx.budgettracker.model.Account;
 import com.crirstallx.budgettracker.service.FinanceManager;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +18,11 @@ public class AccountController {
     @GetMapping
     public List<Account> getAccountList() {
         return financeManager.getAccountList();
+    }
+
+    @PostMapping
+    public Account createAccount(@RequestBody Account account) {
+        financeManager.addAccount(account);
+        return account;
     }
 }

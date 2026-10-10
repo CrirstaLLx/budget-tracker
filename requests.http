@@ -1,0 +1,7 @@
+POST http://localhost:8080/api/accounts
+Content-Type: application/json
+
+{
+  "accountName": "Bezny ucet",
+  "balance": 1000.00
+}
